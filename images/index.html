@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Little Something for You ♡</title>
+  <style>
+    :root {
+      --pink: #f7c8d5;
+      --rose: #d9829b;
+      --deep-rose: #a94f70;
+      --cream: #fff8f5;
+      --ink: #684653;
+      --soft: #fce8ed;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 12% 12%, #fff 0 2px, transparent 3px),
+        radial-gradient(circle at 86% 28%, #fff 0 2px, transparent 3px),
+        linear-gradient(135deg, #fff8f6, #fce8ef 55%, #fff4f1);
+      background-size: 38px 38px, 47px 47px, auto;
+      min-height: 100vh;
+    }
+    .page { width: min(1000px, 92%); margin: auto; padding: 34px 0 55px; }
+    header { text-align: center; padding: 28px 14px 18px; }
+    .eyebrow { letter-spacing: 4px; text-transform: uppercase; color: var(--deep-rose); font: 11px Arial, sans-serif; }
+    h1 { font-size: clamp(2.2rem, 6vw, 4.3rem); font-weight: normal; line-height: 1.05; margin: 14px 0 12px; color: #a94f70; }
+    .subtitle { font-size: 1.08rem; line-height: 1.7; max-width: 620px; margin: auto; }
+    .flower-line { color: #d9829b; letter-spacing: 10px; font-size: 1.4rem; margin: 18px 0; }
+    .panel {
+      background: rgba(255,255,255,.78);
+      border: 1px solid #f1cbd6;
+      border-radius: 24px;
+      padding: clamp(20px, 4vw, 34px);
+      margin: 22px 0;
+      box-shadow: 0 12px 35px rgba(169,79,112,.09);
+    }
+    h2 { color: #a94f70; font-weight: normal; font-size: 1.75rem; margin: 0 0 12px; }
+    p { line-height: 1.75; }
+    .letter-area { text-align: center; }
+    .envelope-wrap { display: flex; justify-content: center; margin: 25px auto 10px; }
+    .envelope {
+      position: relative; width: min(310px, 82vw); height: 190px;
+      border: 0; background: transparent; cursor: pointer; padding: 0;
+      transition: height .65s ease;
+      filter: drop-shadow(0 9px 10px rgba(120,60,80,.13));
+    }
+    .envelope-back { position: absolute; inset: 12px 0 0; background: #f3b9ca; border-radius: 8px; }
+    .letter {
+      position: absolute; left: 8%; width: 84%; height: 145px; bottom: 14px;
+      background: #fffdfb; border-radius: 5px; padding: 17px 14px;
+      transition: transform .65s ease, bottom .65s ease; z-index: 1;
+      overflow: hidden; color: #8d5368; font-size: .95rem;
+    }
+    .letter strong { display: block; color: #a94f70; margin-bottom: 8px; }
+    .flap {
+      position: absolute; z-index: 3; top: 12px; left: 0; width: 0; height: 0;
+      border-left: 155px solid transparent; border-right: 155px solid transparent;
+      border-top: 105px solid #e99eb5; transform-origin: top; transition: transform .55s ease;
+    }
+    .pocket {
+      position: absolute; z-index: 2; bottom: 0; left: 0; width: 0; height: 0;
+      border-left: 155px solid #f7cada; border-right: 155px solid #f7cada;
+      border-top: 95px solid transparent; border-bottom: 95px solid #efb4c6;
+    }
+    .heart-seal {
+      position: absolute; z-index: 4; top: 88px; left: 50%; transform: translateX(-50%);
+      color: white; font-size: 28px; text-shadow: 0 2px 4px #c47791;
+      transition: opacity .3s ease;
+    }
+    .envelope.open { height: 360px; }
+    .envelope.open .flap { transform: rotateX(180deg); z-index: 0; }
+    .envelope.open .letter {
+      height: auto; min-height: 145px; bottom: 105px;
+      transform: none; overflow: visible; z-index: 5;
+    }
+    .envelope.open .heart-seal { opacity: 0; }
+    .hint { font: 12px Arial, sans-serif; color: #a66b7f; }
+    .message-editor { display: grid; gap: 12px; max-width: 650px; margin: 24px auto 0; text-align: left; }
+    label { font: 12px Arial, sans-serif; letter-spacing: 1px; text-transform: uppercase; color: #9a6075; }
+    input, textarea {
+      width: 100%; border: 1px solid #e9bdcb; border-radius: 12px;
+      padding: 12px 14px; background: #fffafa; color: var(--ink); font: 15px Arial, sans-serif;
+      outline-color: #d9829b;
+    }
+    textarea { min-height: 105px; resize: vertical; }
+    .button {
+      border: 0; border-radius: 30px; background: #c66f8d; color: white;
+      padding: 12px 22px; font: 14px Arial, sans-serif; cursor: pointer;
+      transition: transform .2s, background .2s; justify-self: center;
+    }
+    .button:hover { background: #a94f70; transform: translateY(-2px); }
+    .memory-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; margin-top: 18px; }
+    .photo-slot {
+      min-height: 175px; border: 1.5px dashed #d99aad; border-radius: 16px;
+      background: #fff7f8; display: grid; place-items: center; overflow: hidden;
+      position: relative; text-align: center; color: #b2788b; padding: 10px;
+    }
+    .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+    .photo-slot span { font: 13px Arial, sans-serif; }
+    .photo-slot input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .mini-game {
+      max-width: 620px; margin: 30px auto 0; padding: 20px;
+      border: 1px solid #f0c8d4; border-radius: 20px;
+      background: linear-gradient(145deg, #fff7fa, #fffdfb);
+    }
+    .game-heading { color: #a94f70; font-size: 1.35rem; }
+    .game-intro { font-size: .94rem; margin: 8px 0 14px; }
+    .game-stats { display: flex; justify-content: space-between; max-width: 300px; margin: 0 auto 10px; font: 13px Arial, sans-serif; color: #9a6075; }
+    .game-stats strong { color: #a94f70; font-size: 17px; }
+    .game-field {
+      height: 230px; position: relative; overflow: hidden; border-radius: 16px;
+      border: 1px dashed #e3aabb; background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.9) 0 3px, transparent 4px),
+        linear-gradient(135deg, #ffeaf0, #fff6f8);
+      touch-action: manipulation;
+    }
+    .game-start { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #a66b7f; font-size: .95rem; }
+    .start-heart { font-size: 2.6rem; color: #d9829b; }
+    .heart-target {
+      position: absolute; border: 0; background: transparent; padding: 0;
+      color: #d45f88; font-size: 34px; line-height: 1; cursor: pointer;
+      text-shadow: 0 3px 5px rgba(169,79,112,.18);
+      animation: heart-pop .25s ease-out;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .heart-target:active { transform: scale(.8); }
+    @keyframes heart-pop { from { transform: scale(.4); opacity: .3; } to { transform: scale(1); opacity: 1; } }
+    .game-result { min-height: 24px; margin: 12px 0 0; color: #a94f70; font-size: .95rem; }
+    .youtube-frame {
+      position: relative; width: min(100%, 720px); margin: 20px auto 0;
+      aspect-ratio: 16 / 9; padding: 8px; border-radius: 22px;
+      background: linear-gradient(135deg, #f7c8d5, #fff0f4);
+      box-shadow: 0 10px 28px rgba(169,79,112,.12);
+      overflow: hidden;
+    }
+    .youtube-frame iframe {
+      display: block; width: 100%; height: 100%; border: 0;
+      border-radius: 15px; background: #2b1720;
+    }
+    .video-placeholder {
+      width: 100%; height: 100%; border-radius: 15px;
+      display: flex; flex-direction: column; justify-content: center;
+      align-items: center; gap: 10px; color: #9a6075;
+      background: linear-gradient(135deg, #fff0f4, #ffe3eb);
+      font: 14px Arial, sans-serif; text-align: center; padding: 15px;
+    }
+    .placeholder-icon { color: #d9829b; font-size: 54px; line-height: 1; }
+
+    .video-poster {
+      min-height: 330px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 20% 18%, rgba(255,255,255,.85), transparent 28%),
+        radial-gradient(circle at 82% 80%, rgba(255,255,255,.75), transparent 30%),
+        linear-gradient(135deg, #f8cbd8, #fff0f4 52%, #f4c1d0);
+    }
+    .video-placeholder {
+      width: 100%; height: 100%; min-height: 314px; border-radius: 15px;
+      display: flex; flex-direction: column; justify-content: center;
+      align-items: center; gap: 11px; color: #96566f;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,255,255,.55) 0 2px, transparent 3px),
+        radial-gradient(circle at 85% 75%, rgba(255,255,255,.55) 0 2px, transparent 3px),
+        linear-gradient(135deg, #fff0f4, #ffe1ea);
+      background-size: 42px 42px, 54px 54px, auto;
+      font: 14px Arial, sans-serif; text-align: center; padding: 24px 15px;
+    }
+    .video-placeholder strong { color: #a94f70; font: normal 1.35rem Georgia, serif; }
+    .placeholder-icon { color: #d9829b; font-size: 48px; line-height: 1; }
+    .video-play-button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+      min-width: 190px; margin: 8px 0 2px; padding: 15px 25px;
+      border-radius: 999px; color: white; text-decoration: none;
+      background: linear-gradient(135deg, #d9829b, #b95f7d);
+      box-shadow: 0 8px 20px rgba(169,79,112,.25);
+      font: bold 13px Arial, sans-serif; letter-spacing: 2px;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .video-play-button:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 11px 24px rgba(169,79,112,.32);
+      background: linear-gradient(135deg, #cf7894, #a94f70);
+    }
+    .play-triangle { font-size: 17px; }
+    .video-small-note { color: #a66b7f; font: italic 12px Georgia, serif; }
+
+    .bear { text-align: center; padding: 10px 0 0; }
+    .bear-face { font-size: 5.5rem; line-height: 1.2; filter: drop-shadow(0 6px 5px #e7b8c6); }
+    .bear-note { display: inline-block; background: #fff0f4; border-radius: 18px; padding: 10px 17px; margin-top: 4px; }
+    .video-link { display: inline-block; text-decoration: none; color: white; background: #c66f8d; padding: 13px 24px; border-radius: 30px; font: 14px Arial, sans-serif; margin-top: 10px; }
+    .video-link:hover { background: #a94f70; }
+    footer { text-align: center; font-size: .9rem; color: #a66b7f; padding: 25px 10px 0; }
+    .rose-corners { font-size: 1.5rem; letter-spacing: 8px; }
+    @media (max-width: 650px) {
+      .memory-grid { grid-template-columns: 1fr; }
+      .photo-slot { min-height: 220px; }
+      .panel { border-radius: 18px; }
+    }
+
+    /* Single-photo romantic memory frame */
+    .flipbook-intro { max-width: 620px; margin: 0 auto 18px; }
+    .flipbook-wrap { max-width: 680px; margin: 24px auto 8px; }
+    .flipbook { position: relative; width: min(100%, 540px); margin: 0 auto; }
+    .book-page {
+      position: relative; padding: 22px; min-height: 360px;
+      border: 1px solid #efc6d2; border-radius: 8px 20px 20px 8px;
+      background: radial-gradient(circle at 12% 12%, rgba(217,130,155,.12) 0 2px, transparent 3px), linear-gradient(135deg, #fffdfb, #fff1f5);
+      box-shadow: 0 14px 35px rgba(169,79,112,.14), inset 8px 0 12px rgba(169,79,112,.045);
+      overflow: hidden;
+    }
+    .page-ribbon { color:#c47791; letter-spacing:5px; font-size:1rem; }
+    .flip-photo { width:100%; height:260px; margin:18px auto 14px; display:grid; place-items:center; position:relative; overflow:hidden; border:9px solid #fff; outline:1px solid #f0d2db; background:linear-gradient(145deg,#ffeaf0,#fff8fa); box-shadow:0 7px 20px rgba(120,60,80,.12); }
+    .flip-photo img {
+      width: 86%; height: 86%; max-width: 100%; max-height: 100%;
+      object-fit: contain; display: block; margin: auto;
+    }
+    .flip-photo .photo-empty { padding:20px; text-align:center; color:#b2788b; font:14px/1.7 Arial,sans-serif; }
+    .flip-caption { text-align:center; color:#985b72; font-size:1.05rem; font-style:italic; margin:12px 0 2px; }
+    .flipbook-note { color:#a66b7f; font:12px/1.6 Arial,sans-serif; margin-top:13px; text-align:center; }
+    @media(max-width:650px) { .book-page {min-height:330px;padding:16px;} .flip-photo {height:220px;} }
+
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div class="eyebrow">a little corner of the internet, just for you MEL </div>
+      <div class="flower-line">🌸 🌷 🌹</div>
+      <h1>For My Favourite Girl, Mel</h1>
+      <p class="subtitle">Even when life gets busy and the days get loud, there's still a soft little place in my heart that is always yours.</p>
+      <div class="flower-line">♡ ✿ ♡</div>
+    </header>
+
+    <section class="panel letter-area">
+      <h2>A little note for you</h2>
+      <p>There's something waiting inside the envelope. Tap it gently. 💌</p>
+      <div class="envelope-wrap">
+        <button class="envelope" id="envelope" aria-label="Open the love letter" aria-expanded="false">
+          <div class="envelope-back"></div>
+          <div class="letter"><strong id="letterTitle">To my lovely girl,</strong><span id="letterText">I know things haven't been as it was, I hope you never doubt how much you mean to me. I miss our little conversations, your laughter, and simply being close to you. I'm cheering you on through everyday. We'll find our rhythm again, one day at a time. ❤️</span></div>
+          <div class="flap"></div><div class="pocket"></div><div class="heart-seal">♥</div>
+        </button>
+      </div>
+      <div class="hint">Tap the envelope to open or close it</div>
+
+      <div class="mini-game">
+        <div class="game-heading">A tiny game for you 🌷</div>
+        <p class="game-intro">Catch 10 little hearts before the timer runs out. Every heart is a hug from me. 💗</p>
+        <div class="game-stats">
+          <span>Hearts: <strong id="heartScore">0</strong> / 10</span>
+          <span>Time: <strong id="heartTime">20</strong>s</span>
+        </div>
+        <div class="game-field" id="gameField" aria-label="Tap the floating hearts to collect them">
+          <div class="game-start">
+            <span class="start-heart">♡</span>
+            <span>Ready for a little love?</span>
+            <button class="button" id="startGame">Play our little game</button>
+          </div>
+        </div>
+        <p class="game-result" id="gameResult" aria-live="polite">You've got this, sweetheart! ♡</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>One Little Moment, 💗</h2>
+      <p class="flipbook-intro">Some moments are too special to leave in the camera roll. Here's one I want to relive. 🌷</p>
+      <div class="flipbook-wrap">
+        <div class="flipbook">
+          <div class="book-page" id="bookPage">
+            <div class="page-ribbon">♡ &nbsp; A FAVOURITE MEMORY &nbsp; ♡</div>
+            <div class="flip-photo">
+              
+              <img id="flipImage" src="images/mel-picture.jpg" alt="Our special memory" style="display:block">
+            </div>
+            <div class="flip-caption" id="flipCaption">A moment I wish I could pause and keep forever. You make it special just by being in it. ♡</div>
+          </div>
+        </div>
+        <p class="flipbook-note"></p>
+      </div>
+    </section>
+
+    <section class="panel bear">
+      <div class="rose-corners"></div>
+      <div class="bear-face" aria-label="Teddy bear">🧸</div>
+      <h2>A tiny hug, until I can give you a real one</h2>
+      <p class="bear-note"></p>
+      <div class="rose-corners">  ✿  </div>
+    </section>
+
+    <section class="panel" style="text-align:center">
+      <h2>A little something I made for you 🎬</h2>
+      <p>Whenever you miss me, press play. I hope this makes you smile. ❤️</p>
+      <div class="youtube-frame video-poster" id="youtubeFrame">
+        <div class="video-placeholder" id="videoPlaceholder">
+          <span class="placeholder-icon">♡</span>
+          <strong>Our little video is waiting for you</strong>
+          <span>A little trip down memory lane. 🌷</span>
+          <a
+            class="video-play-button"
+            href="https://drive.google.com/file/d/1FjUekl8kRqu4RdjVHJYAcO5vq5TEanLD/view?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Play our special video">
+            <span class="play-triangle" aria-hidden="true">▶</span>
+            <span>PLAY VIDEO</span>
+          </a>
+          <span class="video-small-note">Tap to watch♡</span>
+        </div>
+      </div>
+      <p class="hint"></p>
+    </section>
+
+    <footer>
+      Made with love, ♡<br>
+      <span></span>
+    </footer>
+  </main>
+  <script>
+    // The play button opens the shared Google Drive video in a new tab.
+    // Google Drive sharing must be set to: Anyone with the link — Viewer.
+    const envelope = document.getElementById('envelope');
+    envelope.addEventListener('click', () => {
+      const isOpen = envelope.classList.toggle('open');
+      envelope.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    // A small tap-to-catch game: collect ten hearts within twenty seconds.
+    const gameField = document.getElementById('gameField');
+    const scoreDisplay = document.getElementById('heartScore');
+    const timeDisplay = document.getElementById('heartTime');
+    const resultDisplay = document.getElementById('gameResult');
+    const startButton = document.getElementById('startGame');
+    let score = 0;
+    let secondsLeft = 20;
+    let gameTimer = null;
+    let heartSpawner = null;
+    let gameActive = false;
+
+    function finishGame(won) {
+      gameActive = false;
+      clearInterval(gameTimer);
+      clearInterval(heartSpawner);
+      gameField.querySelectorAll('.heart-target').forEach(heart => heart.remove());
+      resultDisplay.textContent = won
+        ? 'You did it! Sending you 10 big hugs and one extra kiss. 💗'
+        : 'That was lovely! Want to try again, sweetheart? ♡';
+      const overlay = document.createElement('div');
+      overlay.className = 'game-start';
+      overlay.innerHTML = '<span class="start-heart">' + (won ? '💖' : '🌸') + '</span><span>' + (won ? 'You collected all the love!' : 'So close! Give it another go.') + '</span><button class="button" id="restartGame">Play again</button>';
+      gameField.appendChild(overlay);
+      document.getElementById('restartGame').addEventListener('click', startHeartGame);
+    }
+
+    function spawnHeart() {
+      if (!gameActive) return;
+      const heart = document.createElement('button');
+      heart.className = 'heart-target';
+      heart.type = 'button';
+      heart.textContent = ['♥', '♡', '💗'][Math.floor(Math.random() * 3)];
+      heart.setAttribute('aria-label', 'Catch heart');
+      const maxX = Math.max(0, gameField.clientWidth - 48);
+      const maxY = Math.max(0, gameField.clientHeight - 54);
+      heart.style.left = Math.floor(Math.random() * maxX) + 'px';
+      heart.style.top = Math.floor(Math.random() * maxY) + 'px';
+      heart.addEventListener('click', () => {
+        if (!gameActive) return;
+        score += 1;
+        scoreDisplay.textContent = score;
+        heart.remove();
+        if (score >= 10) finishGame(true);
+        else spawnHeart();
+      }, { once: true });
+      gameField.appendChild(heart);
+      setTimeout(() => { if (heart.isConnected) heart.remove(); }, 1500);
+    }
+
+    function startHeartGame() {
+      clearInterval(gameTimer);
+      clearInterval(heartSpawner);
+      score = 0;
+      secondsLeft = 20;
+      gameActive = true;
+      scoreDisplay.textContent = score;
+      timeDisplay.textContent = secondsLeft;
+      resultDisplay.textContent = 'Catch as many hearts as you can! 💕';
+      gameField.innerHTML = '';
+      spawnHeart();
+      heartSpawner = setInterval(() => {
+        if (gameActive && gameField.querySelectorAll('.heart-target').length < 3) spawnHeart();
+      }, 650);
+      gameTimer = setInterval(() => {
+        secondsLeft -= 1;
+        timeDisplay.textContent = secondsLeft;
+        if (secondsLeft <= 0) finishGame(score >= 10);
+      }, 1000);
+    }
+    startButton.addEventListener('click', startHeartGame);
+
+    // One special photo for the memory frame.
+    const flipImage = document.getElementById("flipImage");
+    const photoEmpty = document.getElementById("photoEmpty");
+
+  </script>
+</body>
+</html>
